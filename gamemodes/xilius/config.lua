@@ -3,6 +3,7 @@ XL.Modules = {}
 XL.Modules["player"] = true
 XL.Modules["teams"] = true
 XL.Modules["cmd"] = true
+XL.Modules["resource"] = false
 XL.Modules["money"] = true
 
 XL.Config = {}
