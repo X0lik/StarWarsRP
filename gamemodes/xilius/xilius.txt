@@ -1,0 +1,8 @@
+"xilius"
+{
+	"base"		"base"
+	"title"		"Xilius: StarWasRP"
+	"category"	"rp"
+	"menusystem"	"1"
+
+}

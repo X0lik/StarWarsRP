@@ -1,0 +1,128 @@
+GM.Name = "Xilius"
+GM.Author = "X0lik"
+
+DeriveGamemode( "sandbox" )
+XL = {}
+
+defaultColor = Color( 54, 102, 191 )
+greenColor = Color( 54, 191, 143 )
+orangeColor = Color( 255, 153, 0 )
+redColor = Color( 220, 20, 60 )
+whiteColor = Color( 255, 255, 255 )
+
+function XL:Log( prefix, message, color, submessage )
+
+  if SERVER then
+    if submessage == nil then
+        MsgC( defaultColor, '| [XLib] ', whiteColor, prefix .. ': ', color, message .. '\n' )
+    else
+        MsgC( defaultColor, '| [XLib] ', whiteColor, prefix .. ': ', color, message, whiteColor, ' - ' .. submessage .. '\n' )
+    end
+  end
+
+end
+
+local function LoadFile( part, dir, file )
+
+    if part == 'sv' then
+        if SERVER then
+            include( 'xilius/lib/' .. dir .. '/' .. file )
+        end
+    elseif part == 'sh' then
+        if SERVER then
+            AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. file )
+            include( 'xilius/lib/' .. dir .. '/' .. file  )
+        end
+
+        if CLIENT then
+           include( 'xilius/lib/' .. dir .. '/' .. file  )
+        end
+    elseif part == 'cl' then
+        if SERVER then
+          AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. file )
+        end
+
+        if CLIENT then
+           include( 'xilius/lib/' .. dir .. '/' .. file  )
+        end
+    end
+
+end
+
+local function LoadSubFile( part, dir, subdir, file )
+
+    if part == 'sv' then
+        if SERVER then
+            include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file )
+        end
+    elseif part == 'sh' then
+        if SERVER then
+            AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file )
+            include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file  )
+        end
+
+        if CLIENT then
+           include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file  )
+        end
+    elseif part == 'cl' then
+        if SERVER then
+          AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file )
+        end
+
+        if CLIENT then
+           include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file  )
+        end
+    end
+
+end
+
+local msdirs
+local mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
+for i, v in next, mdirs do
+
+    mfiles = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
+    for k, j in next, mfiles do
+        if string.StartWith( j, "sv" ) then
+            LoadFile( "sv", v, j )
+        elseif string.StartWith( j, "sh" ) then
+            LoadFile( "sh", v, j )
+        elseif string.StartWith( j, "cl" ) then
+            LoadFile( "cl", v, j )
+        end
+    end
+    XL:Log( "Load Module", v, greenColor )
+
+end
+
+mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
+for i, v in ipairs( mdirs ) do
+
+    mfiles = select( 2, file.Find( "xilius/lib/" .. v .. "/*", "LUA" ) )
+    for k, j in ipairs( mfiles ) do
+
+        msdirs = select( 2, file.Find( "xilius/lib/" .. v .. "/" .. "k" .. "/*", "LUA" ) )
+        for l, m in next, msdirs do
+            print( m )
+            if string.StartWith( m, "sv" ) then
+                LuaSubFile( "sv", v, j, m )
+            elseif string.StartWith( m, "sh" ) then
+                LuaSubFile( "sh", v, j, m )
+            elseif string.StartWith( m, "cl" ) then
+                LuaSubFile( "cl", v, j, m )
+            end
+        end
+        XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
+
+    end
+
+end
+
+function GM:Initialize()
+	-- Do stuff
+end
+
+function GM:CreateTeams()
+    for i,v in next, XL.Teams do
+        team.SetUp( i, XL.Teams[i].name, XL.Teams[i].color )
+    end
+end

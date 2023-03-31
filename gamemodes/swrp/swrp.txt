@@ -1,8 +1,0 @@
-"swrp"
-{
-    "base"          "sandbox"
-    "title"         "StarWarsRP"
-    "category"      "rp"
-    "menusystem"    "1"
-
-}
