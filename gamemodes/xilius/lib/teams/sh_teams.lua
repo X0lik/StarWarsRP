@@ -1,6 +1,9 @@
 XL.Teams = {}
 XL.TeamsCount = 0
 XL.DefaultTeam = 0
+--[[local PLAYER = {}
+PLAYER.DisplayName = "Default Class"
+player_manager.RegisterClass( "default", PLAYER, nil )]]
 
 function XL:NewTeam( tbl )
 
