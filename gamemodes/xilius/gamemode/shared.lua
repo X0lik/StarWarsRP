@@ -1,15 +1,19 @@
+if SERVER then
+    AddCSLuaFile( "xilius/config.lua" )
+    include( "xilius/config.lua" )
+end
+if CLIENT then
+    include( "xilius/config.lua" )
+end
+DeriveGamemode( "sandbox" )
 GM.Name = "Xilius"
 GM.Author = "X0lik"
-
-DeriveGamemode( "sandbox" )
-XL = {}
 
 defaultColor = Color( 54, 102, 191 )
 greenColor = Color( 54, 191, 143 )
 orangeColor = Color( 255, 153, 0 )
 redColor = Color( 220, 20, 60 )
 whiteColor = Color( 255, 255, 255 )
-
 function XL:Log( prefix, message, color, submessage )
 
   if SERVER then
@@ -82,15 +86,23 @@ for i, v in next, mdirs do
 
     mfiles = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
     for k, j in next, mfiles do
-        if string.StartWith( j, "sv" ) then
-            LoadFile( "sv", v, j )
-        elseif string.StartWith( j, "sh" ) then
-            LoadFile( "sh", v, j )
-        elseif string.StartWith( j, "cl" ) then
-            LoadFile( "cl", v, j )
+
+
+        if not XL.Modules[v] then
+            XL:Log( "Module disabled", v, orangeColor )
+        else
+            if string.StartWith( j, "sv" ) then
+                LoadFile( "sv", v, j )
+            elseif string.StartWith( j, "sh" ) then
+                LoadFile( "sh", v, j )
+            elseif string.StartWith( j, "cl" ) then
+                LoadFile( "cl", v, j )
+            end
         end
     end
-    XL:Log( "Load Module", v, greenColor )
+    if XL.Modules[v] then
+        XL:Log( "Load Module", v, greenColor )
+    end
 
 end
 
@@ -102,7 +114,11 @@ for i, v in ipairs( mdirs ) do
 
         msdirs = select( 2, file.Find( "xilius/lib/" .. v .. "/" .. "k" .. "/*", "LUA" ) )
         for l, m in next, msdirs do
-            print( m )
+            
+            --[[if not XL.Modules[v.."/"..j] then
+                XL:Log( "SubModule disabled", v .. "/" .. j, orangeColor )
+                return
+            end]]
             if string.StartWith( m, "sv" ) then
                 LuaSubFile( "sv", v, j, m )
             elseif string.StartWith( m, "sh" ) then
@@ -118,11 +134,12 @@ for i, v in ipairs( mdirs ) do
 end
 
 function GM:Initialize()
-	-- Do stuff
+    -- Do stuff
 end
 
 function GM:CreateTeams()
     for i,v in next, XL.Teams do
         team.SetUp( i, XL.Teams[i].name, XL.Teams[i].color )
+        --team.SetClass( XL.TeamsCount, {"default"} )
     end
 end
