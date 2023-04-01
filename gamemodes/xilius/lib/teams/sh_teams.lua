@@ -1,6 +1,6 @@
 XL.Teams = {}
-XL.TeamsCount = 0
-XL.DefaultTeam = 0
+XL.TeamsCount = 1
+XL.DefaultTeam = 1
 --[[local PLAYER = {}
 PLAYER.DisplayName = "Default Class"
 player_manager.RegisterClass( "default", PLAYER, nil )]]

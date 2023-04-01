@@ -6,7 +6,7 @@ if CLIENT then
     include( "xilius/config.lua" )
 end
 DeriveGamemode( "sandbox" )
-GM.Name = "Xilius"
+GM.Name = "Xilius: StarWarsRP"
 GM.Author = "X0lik"
 
 defaultColor = Color( 54, 102, 191 )
@@ -14,15 +14,20 @@ greenColor = Color( 54, 191, 143 )
 orangeColor = Color( 255, 153, 0 )
 redColor = Color( 220, 20, 60 )
 whiteColor = Color( 255, 255, 255 )
+
 function XL:Log( prefix, message, color, submessage )
 
-  if SERVER then
-    if submessage == nil then
-        MsgC( defaultColor, '| [XLib] ', whiteColor, prefix .. ': ', color, message .. '\n' )
-    else
-        MsgC( defaultColor, '| [XLib] ', whiteColor, prefix .. ': ', color, message, whiteColor, ' - ' .. submessage .. '\n' )
+    if SERVER then
+        local prefixColor = defaultColor
+        if color ~= greenColor then
+            prefixColor = color
+        end
+        if submessage == nil then
+            MsgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message .. '\n' )
+        else
+            MsgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message, whiteColor, ' - ' .. submessage .. '\n' )
+        end
     end
-  end
 
 end
 
@@ -134,12 +139,12 @@ for i, v in ipairs( mdirs ) do
 end
 
 function GM:Initialize()
-    -- Do stuff
+	-- Do stuff
 end
 
 function GM:CreateTeams()
     for i,v in next, XL.Teams do
         team.SetUp( i, XL.Teams[i].name, XL.Teams[i].color )
-        --team.SetClass( XL.TeamsCount, {"default"} )
+        team.SetClass( XL.TeamsCount, {"player_default"} )
     end
 end
