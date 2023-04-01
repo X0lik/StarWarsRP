@@ -85,66 +85,73 @@ local function LoadSubFile( part, dir, subdir, file )
 
 end
 
-local msdirs
-local mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
-for i, v in next, mdirs do
+function XL:Initialize()
 
-    mfiles = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
-    for k, j in next, mfiles do
+    local msdirs
+    local mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
+    for i, v in next, mdirs do
+
+        mfiles = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
+        for k, j in next, mfiles do
 
 
-        if not XL.Modules[v] then
-            XL:Log( "Module disabled", v, orangeColor )
-        else
-            if string.StartWith( j, "sv" ) then
-                LoadFile( "sv", v, j )
-            elseif string.StartWith( j, "sh" ) then
-                LoadFile( "sh", v, j )
-            elseif string.StartWith( j, "cl" ) then
-                LoadFile( "cl", v, j )
+            if not XL.Modules[v] then
+                XL:Log( "Module disabled", v, orangeColor )
+            else
+                if string.StartWith( j, "sv" ) then
+                    LoadFile( "sv", v, j )
+                elseif string.StartWith( j, "sh" ) then
+                    LoadFile( "sh", v, j )
+                elseif string.StartWith( j, "cl" ) then
+                    LoadFile( "cl", v, j )
+                end
             end
         end
-    end
-    if XL.Modules[v] then
-        XL:Log( "Load Module", v, greenColor )
-    end
-
-end
-
-mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
-for i, v in ipairs( mdirs ) do
-
-    mfiles = select( 2, file.Find( "xilius/lib/" .. v .. "/*", "LUA" ) )
-    for k, j in ipairs( mfiles ) do
-
-        msdirs = select( 2, file.Find( "xilius/lib/" .. v .. "/" .. "k" .. "/*", "LUA" ) )
-        for l, m in next, msdirs do
-            
-            --[[if not XL.Modules[v.."/"..j] then
-                XL:Log( "SubModule disabled", v .. "/" .. j, orangeColor )
-                return
-            end]]
-            if string.StartWith( m, "sv" ) then
-                LuaSubFile( "sv", v, j, m )
-            elseif string.StartWith( m, "sh" ) then
-                LuaSubFile( "sh", v, j, m )
-            elseif string.StartWith( m, "cl" ) then
-                LuaSubFile( "cl", v, j, m )
-            end
+        if XL.Modules[v] then
+            XL:Log( "Load Module", v, greenColor )
         end
-        XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
 
     end
 
+    mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
+    for i, v in ipairs( mdirs ) do
+
+        mfiles = select( 2, file.Find( "xilius/lib/" .. v .. "/*", "LUA" ) )
+        for k, j in ipairs( mfiles ) do
+
+            msdirs = select( 2, file.Find( "xilius/lib/" .. v .. "/" .. "k" .. "/*", "LUA" ) )
+            for l, m in next, msdirs do
+                
+                if not XL.Modules[v.."/"..j] or not XL.Modules[v] then
+                    XL:Log( "SubModule disabled", v .. "/" .. j, orangeColor )
+                    return
+                end
+                if string.StartWith( m, "sv" ) then
+                    LuaSubFile( "sv", v, j, m )
+                elseif string.StartWith( m, "sh" ) then
+                    LuaSubFile( "sh", v, j, m )
+                elseif string.StartWith( m, "cl" ) then
+                    LuaSubFile( "cl", v, j, m )
+                end
+            end
+            --XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
+
+        end
+
+    end
+
+    XL:Log( "Loading Complete", "Modules", greenColor )
 end
 
 function GM:Initialize()
-	-- Do stuff
+    XL:Initialize()
 end
 
 function GM:CreateTeams()
-    for i,v in next, XL.Teams do
-        team.SetUp( i, XL.Teams[i].name, XL.Teams[i].color )
-        team.SetClass( XL.TeamsCount, {"player_default"} )
-    end
+    timer.Simple( 0, function()
+        for i,v in next, XL.Teams do
+            team.SetUp( i, XL.Teams[i].name, XL.Teams[i].color )
+            team.SetClass( XL.TeamsCount, {"player_default"} )
+        end
+    end)
 end
