@@ -87,13 +87,12 @@ end
 
 function XL:Initialize()
 
-    local msdirs
+    local msdirs, msfiles
     local mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
     for i, v in next, mdirs do
 
-        mfiles = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
+        mfiles, msdirs = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
         for k, j in next, mfiles do
-
 
             if not XL.Modules[v] then
                 XL:Log( "Module disabled", v, orangeColor )
@@ -111,21 +110,37 @@ function XL:Initialize()
             XL:Log( "Load Module", v, greenColor )
         end
 
+        for k, j in next, msdirs do
+
+            msfiles = file.Find( "xilius/lib/" .. v .. "/" .. j .. "/*", "LUA" )
+            for l, m in next, msfiles do
+                if not XL.Modules[v] then
+                    return
+                else
+                    if string.StartWith( m, "sv" ) then
+                        LoadSubFile( "sv", v, j, m )
+                    elseif string.StartWith( m, "sh" ) then
+                        LoadSubFile( "sh", v, j, m )
+                    elseif string.StartWith( m, "cl" ) then
+                        LoadSubFile( "cl", v, j, m )
+                    end
+                end
+            end
+            XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
+        end
+
     end
 
-    mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
+    --[[mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
     for i, v in ipairs( mdirs ) do
 
         mfiles = select( 2, file.Find( "xilius/lib/" .. v .. "/*", "LUA" ) )
         for k, j in ipairs( mfiles ) do
 
-            msdirs = select( 2, file.Find( "xilius/lib/" .. v .. "/" .. "k" .. "/*", "LUA" ) )
+
+            msdirs = select( 2, file.Find( "xilius/lib/" .. v .. "/" .. j .. "/*", "LUA" ) )
             for l, m in next, msdirs do
-                
-                if not XL.Modules[v.."/"..j] or not XL.Modules[v] then
-                    XL:Log( "SubModule disabled", v .. "/" .. j, orangeColor )
-                    return
-                end
+                    XL:Log( "Load Sasdasdasasdasdasdas", m, greenColor )
                 if string.StartWith( m, "sv" ) then
                     LuaSubFile( "sv", v, j, m )
                 elseif string.StartWith( m, "sh" ) then
@@ -134,11 +149,10 @@ function XL:Initialize()
                     LuaSubFile( "cl", v, j, m )
                 end
             end
-            --XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
 
         end
 
-    end
+    end]]
 
     XL:Log( "Loading Complete", "Modules", greenColor )
 end
