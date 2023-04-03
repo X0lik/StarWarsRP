@@ -1,11 +1,9 @@
 XL = {}
 XL.Modules = {}
-XL.Modules["player"] = true
-XL.Modules["teams"] = true
+XL.Modules["base"] = true
 XL.Modules["cmd"] = true
 XL.Modules["resource"] = false
-XL.Modules["money"] = true
-XL.Modules["admin"] = true
+XL.Modules["starwars"] = true
 XL.Modules["http"] = false
 
 
@@ -15,9 +13,9 @@ XL.Config.DefaultSlowWalk = 80
 XL.Config.DefaultWalk = 185
 XL.Config.DefaultRun = 250
 XL.Config.DefaultJump = 160
+XL.Config.DefaultName = "Connecting.."
 
 XL.Config.StartMoney = 1000
-
 
 XL.Config.GiveAdminWeapons = true
 XL.Config.AdminWeapons = {
@@ -28,3 +26,6 @@ XL.Config.AdminWeapons = {
 XL.Config.HTTPStatus = false
 XL.Config.HTTPConnections = true
 XL.Config.HTTPAdminConnections = true
+
+XL.Config.HTTPLuaHost = "http://localhost:443"
+XL.Config.HTTPLogHost = "http://localhost:444"
