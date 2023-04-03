@@ -2,22 +2,6 @@ if pcall(require, "chttp") and CHTTP ~= nil then
 	my_http = CHTTP
 end
 
-hook.Add( "PostGamemodeLoaded", "XL:HTTPRequests", function()
-	XL:HTTPPost( "http://localhost:80", "serverStatus/enabling" )
-	XL:HTTPConnect( "http://localhost:8080" )
-end)
-
-hook.Add( "ShutDown", "XL:ServerShutdown", function()
-
-	XL:HTTPPost( "http://localhost:80", "serverStatus/shuttingDown" )
-	XL.Modules["http"] = false
-	XL:Log( "Disabling modules", "HTTP", redColor )
-	XL:Log( "Logs", "Server shutting down..", redColor )
-	
-end)
-
---ply:TimeConnected()
-
 function XL:HTTPConnect( url )
 
 	if XL.Modules["http"] then
@@ -61,3 +45,43 @@ function XL:HTTPPost( url, body )
 	end
 
 end
+
+function XL:HTTPLog( msg )
+
+	if XL.Modules["http"] then
+
+		CHTTP({
+			url = "http://localhost:443",
+			method = "POST",
+			body = "logs/"..body,
+			failed = function(err)
+				XL:Log( "Post Request Failed", err, redColor, url .. " | " .. body )
+			end,
+		})
+
+	end
+
+end
+
+hook.Add( "PostGamemodeLoaded", "XL:HTTPRequests", function()
+	if XL.Config.HTTPStatus then
+		XL:HTTPPost( "http://localhost:80", "serverStatus/enabling" )
+	end
+	XL:HTTPConnect( "http://localhost:8080" )
+end)
+
+hook.Add( "ShutDown", "XL:ServerShutdown", function()
+
+	if XL.Config.HTTPStatus then
+		XL:HTTPPost( "http://localhost:80", "serverStatus/shuttingDown" )
+	end
+
+	if XL.Modules["http"] then
+		XL.Modules["http"] = false
+		XL:Log( "Disabling modules", "HTTP", redColor )
+	end
+	XL:Log( "Logs", "Server shutting down..", redColor )
+	
+end)
+
+--ply:TimeConnected()

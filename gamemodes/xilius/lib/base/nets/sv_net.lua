@@ -26,6 +26,7 @@ end
 function nw.IsTimedOut(ply, name)
     if ply.NetTimedOut[name] ~= nil and ply.NetTimedOut[name] then
         XL:Log( ply:Name() .. " (" .. ply:SteamID() .. ") trying to use exploit", name, redColor )
+        XL:HTTPLog( ply:Name() .. " (" .. ply:SteamID() .. ") trying to use exploit: " .. name )
         return true
     end
     return false
