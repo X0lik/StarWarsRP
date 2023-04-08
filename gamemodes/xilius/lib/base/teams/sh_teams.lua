@@ -10,13 +10,23 @@ function XL:NewTeam( tbl )
 
 end
 
+local PLY = FindMetaTable("Player")
+function PLY:GetTeam()
+	return XL.Teams[self:Team()], self.teamRank
+end
+
 TEAM_CITIZEN = XL:NewTeam({
 	name = "Citizen",
 	color = Color( 0, 255, 0 ),
 	salary = 100,
 	models = { "models/player/Group02/male_04.mdl", "models/player/Group02/male_06.mdl" },
 	weapons = {},
-	category = "citizens"
+	category = "citizens",
+	ranks = {
+		[1] = {
+			weapons = { "weapon_fists", "weapon_ar2" },
+		}
+	}
 })
 
 TEAM_POLICE = XL:NewTeam({
