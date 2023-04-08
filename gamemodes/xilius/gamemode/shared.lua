@@ -6,6 +6,7 @@ if CLIENT then
     include( "xilius/config.lua" )
 end
 DeriveGamemode( "sandbox" )
+--gamemode.Register( XL.GM, "xilius", "sandbox" )
 GM.Name = "Xilius: StarWarsRP"
 GM.Author = "X0lik"
 
@@ -94,9 +95,7 @@ function XL:Initialize()
         mfiles, msdirs = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
         for k, j in next, mfiles do
 
-            if not XL.Modules[v] then
-                XL:Log( "Module disabled", v, orangeColor )
-            else
+            if XL.Modules[v] then
                 if string.StartWith( j, "sv" ) then
                     LoadFile( "sv", v, j )
                 elseif string.StartWith( j, "sh" ) then
@@ -108,15 +107,15 @@ function XL:Initialize()
         end
         if XL.Modules[v] then
             XL:Log( "Load Module", v, greenColor )
+        else
+            XL:Log( "Module disabled", v, orangeColor )
         end
 
         for k, j in next, msdirs do
 
             msfiles = file.Find( "xilius/lib/" .. v .. "/" .. j .. "/*", "LUA" )
             for l, m in next, msfiles do
-                if not XL.Modules[v] then
-                    return
-                else
+                if XL.Modules[v] then
                     if string.StartWith( m, "sv" ) then
                         LoadSubFile( "sv", v, j, m )
                     elseif string.StartWith( m, "sh" ) then
@@ -126,7 +125,7 @@ function XL:Initialize()
                     end
                 end
             end
-            XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
+            --XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
         end
 
     end
@@ -158,14 +157,16 @@ function XL:Initialize()
 end
 
 function GM:Initialize()
-    XL:Initialize()
+    --XL:Initialize()
 end
+
+XL:Initialize()
 
 function GM:CreateTeams()
     timer.Simple( 0, function()
         for i,v in next, XL.Teams do
             team.SetUp( i, XL.Teams[i].name, XL.Teams[i].color )
-            team.SetClass( XL.TeamsCount, {"player_default"} )
+            team.SetClass( i, {"player_default"} )
         end
     end)
 end
