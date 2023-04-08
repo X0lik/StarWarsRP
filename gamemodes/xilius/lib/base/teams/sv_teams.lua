@@ -11,7 +11,7 @@ function XL:UpdateTeam( ply )
 	XL:Log( "Loading player", ply:Name(), greenColor )
 	local team = XL.Teams[ply:Team()]
 	local rank
-	if ply.teamRank ~= nil and team.ranks ~= nil then
+	if ply.teamRank ~= nil and team.ranks ~= nil and team.ranks[ply.teamRank] ~= nil then
 		rank = team.ranks[ply.teamRank]
 	end
 

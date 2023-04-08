@@ -15,16 +15,31 @@ function PLY:GetTeam()
 	return XL.Teams[self:Team()], self.teamRank
 end
 
+function XL:GetTeamName( ply )
+	local team = XL.Teams[ply:Team()]
+	if ply.teamRank ~= nil and team.ranks ~= nil and team.ranks[ply.teamRank] ~= nil then
+		return team.ranks[ply.teamRank].name
+	else
+		return team.name
+	end
+end
+
 TEAM_CITIZEN = XL:NewTeam({
 	name = "Citizen",
 	color = Color( 0, 255, 0 ),
 	salary = 100,
 	models = { "models/player/Group02/male_04.mdl", "models/player/Group02/male_06.mdl" },
 	weapons = {},
+	ammo = {},
 	category = "citizens",
 	ranks = {
 		[1] = {
+			name = "Big Citizen",
+			models = { "models/player/Group02/male_04.mdl", "models/player/Group02/male_06.mdl" },
 			weapons = { "weapon_fists", "weapon_ar2" },
+			ammo = {
+				["357"] = 50
+			},
 		}
 	}
 })
