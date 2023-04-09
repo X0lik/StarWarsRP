@@ -19,17 +19,17 @@ hook.Add( "Think", "XL:FirstView", function()
 
 end)
 
-local eyeview = {}
+local view = {}
 local attachment
 hook.Add( "CalcView", "XL:ChangeView", function( ply, _, ang, fov ) 
 
-	if ply:IsValid() && ply:Alive() && not ply:Crouching() then
+	if ply:IsValid() && ply:Alive() then
 		
-		attachment = ply:GetAttachment( 1 )
-		eyeview.origin = attachment.Pos
-		eyeview.angles = ang
-		eyeview.fov = fov
-		return eyeview
+		attachment = ply:GetAttachment(1)
+		view.origin = attachment.Pos
+		view.angles = ang
+		view.fov = fov
+		return view
 	
 	end
 
