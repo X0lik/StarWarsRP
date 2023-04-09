@@ -1,10 +1,12 @@
 XL = {}
 XL.Modules = {}
 XL.Modules["base"] = true
+XL.Modules["vgui"] = true
 XL.Modules["cmd"] = true
 XL.Modules["resource"] = false
-XL.Modules["starwars"] = true
 XL.Modules["http"] = false
+XL.Modules["starwars"] = true
+XL.Modules["donate"] = false
 
 
 XL.Config = {}
