@@ -25,9 +25,11 @@ XL.Config.AdminWeapons = {
 	"gmod_tool"
 }
 
-XL.Config.HTTPStatus = false
+XL.Config.HTTPStatus = true
 XL.Config.HTTPConnections = true
 XL.Config.HTTPAdminConnections = true
 
 XL.Config.HTTPLuaHost = "http://localhost:443"
 XL.Config.HTTPLogHost = "http://localhost:444"
+
+XL.Config.RenderDistance = 1000
