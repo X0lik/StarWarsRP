@@ -37,6 +37,7 @@ TEAM_CITIZEN = XL:NewTeam({
 	ammo = {},
 	category = "citizens",
 	ranks = {
+
 		[1] = {
 			name = "Big Citizen",
 			models = { "models/player/Group02/male_04.mdl", "models/player/Group02/male_06.mdl" },
@@ -45,6 +46,7 @@ TEAM_CITIZEN = XL:NewTeam({
 				["357"] = 50
 			},
 		}
+		
 	}
 })
 

@@ -2,11 +2,12 @@ if SERVER then
     AddCSLuaFile( "xilius/config.lua" )
     include( "xilius/config.lua" )
 end
+
 if CLIENT then
     include( "xilius/config.lua" )
 end
+
 DeriveGamemode( "sandbox" )
---gamemode.Register( XL.GM, "xilius", "sandbox" )
 GM.Name = "Xilius: StarWarsRP"
 GM.Author = "X0lik"
 
