@@ -10,17 +10,21 @@ function XL:NewTeam( tbl )
 
 end
 
-local PLY = FindMetaTable("Player")
-function PLY:GetTeam()
-	return XL.Teams[self:Team()], self.teamRank
-end
-
 function XL:GetTeamName( ply )
 	local team = XL.Teams[ply:Team()]
 	if ply.teamRank ~= nil and team.ranks ~= nil and team.ranks[ply.teamRank] ~= nil then
 		return team.ranks[ply.teamRank].name
 	else
 		return team.name
+	end
+end
+
+local PLY = FindMetaTable("Player")
+function PLY:GetTeam()
+	if ply.teamRank ~= nil and team.ranks ~= nil and team.ranks[ply.teamRank] ~= nil then
+		return XL.Teams[self:Team()].ranks[ply.teamRank]
+	else
+		return XL.Teams[self:Team()]
 	end
 end
 
