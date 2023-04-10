@@ -17,6 +17,7 @@ orangeColor = Color( 255, 153, 0 )
 redColor = Color( 220, 20, 60 )
 whiteColor = Color( 255, 255, 255 )
 
+local msgC = MsgC
 function XL:Log( prefix, message, color, submessage )
 
     if SERVER then
@@ -25,63 +26,38 @@ function XL:Log( prefix, message, color, submessage )
             prefixColor = color
         end
         if submessage == nil then
-            MsgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message .. '\n' )
+            msgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message .. '\n' )
         else
-            MsgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message, whiteColor, ' - ' .. submessage .. '\n' )
+            msgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message, whiteColor, ' - ' .. submessage .. '\n' )
         end
     end
 
 end
 
+local includeFile = include
+local addCSFile = AddCSLuaFile
 local function LoadFile( part, dir, file )
 
     if part == 'sv' then
         if SERVER then
-            include( 'xilius/lib/' .. dir .. '/' .. file )
+            includeFile( 'xilius/lib/' .. dir .. '/' .. file )
         end
     elseif part == 'sh' then
         if SERVER then
-            AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. file )
-            include( 'xilius/lib/' .. dir .. '/' .. file  )
+            addCSFile( 'xilius/lib/' .. dir .. '/' .. file )
+            includeFile( 'xilius/lib/' .. dir .. '/' .. file  )
         end
 
         if CLIENT then
-           include( 'xilius/lib/' .. dir .. '/' .. file  )
+           includeFile( 'xilius/lib/' .. dir .. '/' .. file  )
         end
     elseif part == 'cl' then
         if SERVER then
-          AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. file )
+          addCSFile( 'xilius/lib/' .. dir .. '/' .. file )
         end
 
         if CLIENT then
-           include( 'xilius/lib/' .. dir .. '/' .. file  )
-        end
-    end
-
-end
-
-local function LoadSubFile( part, dir, subdir, file )
-
-    if part == 'sv' then
-        if SERVER then
-            include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file )
-        end
-    elseif part == 'sh' then
-        if SERVER then
-            AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file )
-            include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file  )
-        end
-
-        if CLIENT then
-           include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file  )
-        end
-    elseif part == 'cl' then
-        if SERVER then
-          AddCSLuaFile( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file )
-        end
-
-        if CLIENT then
-           include( 'xilius/lib/' .. dir .. '/' .. subdir .. '/' .. file  )
+           includeFile( 'xilius/lib/' .. dir .. '/' .. file  )
         end
     end
 
@@ -89,19 +65,21 @@ end
 
 function XL:Initialize()
 
-    local msdirs, msfiles
-    local mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
+    local strStart = string.StartWith
+    local fFind = file.Find
+    local mtdirs, msdirs, mtfiles, msfiles
+    local mfiles, mdirs = fFind( "xilius/lib/*", "LUA" )
     for i, v in next, mdirs do
 
-        mfiles, msdirs = file.Find( "xilius/lib/" .. v .. "/*", "LUA" )
+        mfiles, msdirs = fFind( "xilius/lib/" .. v .. "/*", "LUA" )
         for k, j in next, mfiles do
 
             if XL.Modules[v] then
-                if string.StartWith( j, "sv" ) then
+                if strStart( j, "sv" ) then
                     LoadFile( "sv", v, j )
-                elseif string.StartWith( j, "sh" ) then
+                elseif strStart( j, "sh" ) then
                     LoadFile( "sh", v, j )
-                elseif string.StartWith( j, "cl" ) then
+                elseif strStart( j, "cl" ) then
                     LoadFile( "cl", v, j )
                 end
             end
@@ -114,46 +92,39 @@ function XL:Initialize()
 
         for k, j in next, msdirs do
 
-            msfiles = file.Find( "xilius/lib/" .. v .. "/" .. j .. "/*", "LUA" )
+            msfiles, mtdirs = fFind( "xilius/lib/" .. v .. "/" .. j .. "/*", "LUA" )
             for l, m in next, msfiles do
                 if XL.Modules[v] then
-                    if string.StartWith( m, "sv" ) then
-                        LoadSubFile( "sv", v, j, m )
-                    elseif string.StartWith( m, "sh" ) then
-                        LoadSubFile( "sh", v, j, m )
-                    elseif string.StartWith( m, "cl" ) then
-                        LoadSubFile( "cl", v, j, m )
+                    if strStart( m, "sv" ) then
+                        LoadFile( "sv", v.."/"..j, m )
+                    elseif strStart( m, "sh" ) then
+                        LoadFile( "sh", v.."/"..j, m )
+                    elseif strStart( m, "cl" ) then
+                        LoadFile( "cl", v.."/"..j, m )
                     end
                 end
             end
+
+            for e, g in next, mtdirs do
+
+                mtfiles = fFind( "xilius/lib/" .. v .. "/" .. j .. "/" .. g .. "/*", "LUA" )
+                for f, h in next, mtfiles do
+                    if XL.Modules[v] then
+                        if strStart( h, "sv" ) then
+                            LoadFile( "sv", v.."/"..j.."/"..g, h )
+                        elseif strStart( h, "sh" ) then
+                            LoadFile( "sh", v.."/"..j.."/"..g, h )
+                        elseif strStart( h, "cl" ) then
+                            LoadFile( "cl", v.."/"..j.."/"..g, h )
+                        end
+                    end
+                end
+            end
+
             --XL:Log( "Load SubModule", v .. "/" .. j, greenColor )
         end
 
     end
-
-    --[[mfiles, mdirs = file.Find( "xilius/lib/*", "LUA" )
-    for i, v in ipairs( mdirs ) do
-
-        mfiles = select( 2, file.Find( "xilius/lib/" .. v .. "/*", "LUA" ) )
-        for k, j in ipairs( mfiles ) do
-
-
-            msdirs = select( 2, file.Find( "xilius/lib/" .. v .. "/" .. j .. "/*", "LUA" ) )
-            for l, m in next, msdirs do
-                    XL:Log( "Load Sasdasdasasdasdasdas", m, greenColor )
-                if string.StartWith( m, "sv" ) then
-                    LuaSubFile( "sv", v, j, m )
-                elseif string.StartWith( m, "sh" ) then
-                    LuaSubFile( "sh", v, j, m )
-                elseif string.StartWith( m, "cl" ) then
-                    LuaSubFile( "cl", v, j, m )
-                end
-            end
-
-        end
-
-    end]]
-
     XL:Log( "Loading Complete", "Modules", greenColor )
 end
 
@@ -163,11 +134,14 @@ end
 
 XL:Initialize()
 
+local timerSimple = timer.Simple
+local tSetup = team.SetUp
+local tSetClass = team.SetClass
 function GM:CreateTeams()
     timer.Simple( 0, function()
         for i,v in next, XL.Teams do
-            team.SetUp( i, XL.Teams[i].name, XL.Teams[i].color )
-            team.SetClass( i, {"player_default"} )
+            tSetup( i, XL.Teams[i].name, XL.Teams[i].color )
+            tSetClass( i, {"player_default"} )
         end
     end)
 end
