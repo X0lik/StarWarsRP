@@ -70,7 +70,6 @@ function meta:CharLoad()
     return false, "Персонажа не существует!"
   end
 
-  print( data )
   data = strSplit( data, "|" )
   self:SetName( data[1] )
   self:SetID( data[2] )
