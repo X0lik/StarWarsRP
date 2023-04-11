@@ -1,11 +1,16 @@
-local PLY = FindMetaTable("Player")
-function PLY:SetName( newName )
-	self:SetNWString( "XL:Name", newName )
+local PLAYER = FindMetaTable("Player")
+function PLAYER:Nick()
+	return self:GetNW2String( "XL:Name", XL.Config.DefaultName )
 end
 
-function PLY:Name()
-    return self:GetNWString( "XL:Name" ) or XL.Config.DefaultName
+function PLAYER:ID()
+	return self:GetNW2String( "XL:ID", "0" )
 end
-PLY.SteamName = PLY.Name
-PLY.GetName = PLY.Name
-PLY.Nick = PLY.Name
+
+function PLAYER:SetName( newName )
+	self:SetNW2String( "XL:Name", newName )
+end
+
+function PLAYER:SetID( newID )
+	self:SetNW2String( "XL:ID", newID )
+end
