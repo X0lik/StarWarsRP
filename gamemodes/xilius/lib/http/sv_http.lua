@@ -96,9 +96,15 @@ hook.Add( "ShutDown", "XL:ServerShutdown", function()
 	
 end)
 
-hook.Add( "PlayerConnect", "XL:HTTPPlayerConnect", function( name, ip )
+hook.Add( "PlayerAuthed", "XL:HTTPPlayerConnect", function( ply )
 
 	if XL.Config.HTTPConnections then
+		local plyEmoji
+		if ply:IsSuperAdmin() then
+			plyEmoji = "⭐"
+		else
+			plyEmoji = "👤"
+		end
 		CHTTP({
 			method = "POST",
 			type = "application/json",
@@ -107,8 +113,8 @@ hook.Add( "PlayerConnect", "XL:HTTPPlayerConnect", function( name, ip )
 			body  = util.TableToJSON({
 				embeds = {
 					{
-						title = "Player connect",
-						description = "**Server:** " .. GetHostName() .. "\n" .. "**Player: **" .. name .. "\n" .. "**Player IP: **" .. ip,
+						title = plyEmoji .. " | Player connect",
+						description = "**Server:** " .. GetHostName() .. "\n" .. "**Group: **" .. ply:GetUserGroup():upper() .. "\n" .. "**Name: **" .. ply:Nick() .. "\n\n" .. "**Players: **" .. player.GetCount(),
 						color = Abob( Color( 0, 191, 255 ) ),
 						--[[author = {
 							name = "X0lik",
