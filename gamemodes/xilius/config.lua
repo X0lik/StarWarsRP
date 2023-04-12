@@ -35,4 +35,6 @@ XL.Config.HTTPAdminConnections = false
 XL.Config.HTTPLuaHost = "http://localhost:443"
 XL.Config.HTTPLogHost = "http://localhost:444"
 
-XL.Config.RenderDistance = 1000
+XL.Config.VehicleRenderDist = 1000
+XL.Config.EntityRenderDist = 2000
+XL.Config.DoorRenderDist = 9000
