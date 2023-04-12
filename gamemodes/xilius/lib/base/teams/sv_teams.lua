@@ -1,7 +1,7 @@
 function XL:SetTeam( ply, team, rank )
 	ply:SetTeam( team )
 	ply.teamRank = 0
-	if rank ~= nil then
+	if rank ~= nil and rank ~= 0 then
 		ply.teamRank = rank
 	end
 end
@@ -13,8 +13,10 @@ function XL:UpdateTeam( ply )
 	local rank = ply.teamRank
 
 	if team == nil then return end
-	if rank ~= nil and team.ranks ~= nil and team.ranks[rank] ~= nil then
+	if rank ~= nil and rank ~= 0 and team.ranks ~= nil and team.ranks[rank] ~= nil then
 		rank = team.ranks[rank]
+	else
+		rank = nil
 	end
 
 	if rank ~= nil && rank.weapons ~= nil then

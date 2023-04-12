@@ -21,8 +21,8 @@ end
 
 local PLY = FindMetaTable("Player")
 function PLY:GetTeam()
-	if ply.teamRank ~= nil and team.ranks ~= nil and team.ranks[ply.teamRank] ~= nil then
-		return XL.Teams[self:Team()].ranks[ply.teamRank]
+	if self.teamRank ~= nil and team.ranks ~= nil and team.ranks[self.teamRank] ~= nil then
+		return XL.Teams[self:Team()].ranks[self.teamRank]
 	else
 		return XL.Teams[self:Team()]
 	end
