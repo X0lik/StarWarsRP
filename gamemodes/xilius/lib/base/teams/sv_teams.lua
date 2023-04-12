@@ -19,6 +19,10 @@ function XL:UpdateTeam( ply )
 		rank = nil
 	end
 
+	for i,v in next, XL.Config.DefaultWeapons do
+		ply:Give( v )
+	end
+
 	if rank ~= nil && rank.weapons ~= nil then
 		for i,v in next, rank.weapons do
 			ply:Give( v )

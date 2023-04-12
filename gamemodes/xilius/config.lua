@@ -3,8 +3,8 @@ XL.Modules = {}
 XL.Modules["base"] = true
 XL.Modules["vgui"] = true
 XL.Modules["cmd"] = true
-XL.Modules["resource"] = false
-XL.Modules["http"] = false
+XL.Modules["resource"] = true
+XL.Modules["http"] = true
 XL.Modules["starwars"] = true
 XL.Modules["donate"] = false
 
@@ -19,15 +19,18 @@ XL.Config.DefaultName = "Connecting.."
 
 XL.Config.StartMoney = 1000
 
+XL.Config.DefaultWeapons = {
+	"hands"
+}
 XL.Config.GiveAdminWeapons = true
 XL.Config.AdminWeapons = {
 	"weapon_physgun",
 	"gmod_tool"
 }
 
-XL.Config.HTTPStatus = true
+XL.Config.HTTPStatus = false
 XL.Config.HTTPConnections = true
-XL.Config.HTTPAdminConnections = true
+XL.Config.HTTPAdminConnections = false
 
 XL.Config.HTTPLuaHost = "http://localhost:443"
 XL.Config.HTTPLogHost = "http://localhost:444"
