@@ -41,11 +41,10 @@ hook.Add( "HUDPaint", "XL:Crosshair", function()
 	ply = LocalPlayer()
 	hitpos = ply:GetEyeTrace().HitPos:ToScreen()
 
-	surface.SetDrawColor( Color( 0, 0, 0, 255 ) )
-	surface.DrawRect( hitpos.x - 2, hitpos.y - 2, 6, 6 )
-
-	surface.SetDrawColor( Color( 255, 255, 255, 255 ) )
-	surface.DrawRect( hitpos.x - 1, hitpos.y - 1, 4, 4 )
+	surface.SetDrawColor( 0, 0, 0 )
+	draw.Circle( hitpos.x, hitpos.y, 4, 10 )
+	surface.SetDrawColor( 255, 255, 255 )
+	draw.Circle( hitpos.x, hitpos.y, 3, 10 )
 
 end)
 hook.Add( "ShouldDrawLocalPlayer", "XL:DrawLocalPlayer", function() return true end)
