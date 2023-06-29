@@ -1,12 +1,13 @@
+local writeUInt, writeEntity, netStart, sendToServer = net.WriteUInt, net.WriteEntity, net.Start, net.SendToServer
+local getPlayers, getPlayerCounts = player.GetAll, player.GetCount
+local drawBox, drawText = draw.RoundedBox, draw.SimpleText
+local xLerp, frameTime = Lerp, FrameTime
+local getHostName = GetHostName
+local uiCreate = vgui.Create
+local isValid = IsValid
+
 local function WhitelistOpen()
 
-	local writeUInt, writeEntity, netStart, sendToServer = net.WriteUInt, net.WriteEntity, net.Start, net.SendToServer
-	local getPlayers, getPlayerCounts = player.GetAll, player.GetCount
-	local drawBox, drawText = draw.RoundedBox, draw.SimpleText
-	local xLerp, frameTime = Lerp, FrameTime
-	local getHostName = GetHostName
-	local uiCreate = vgui.Create
-	local isValid = IsValid
 	local sw, sh = ScrW(), ScrH()
 	local wbw, wbh = sw*.7, sh*.7
 	local isAnimating = true
