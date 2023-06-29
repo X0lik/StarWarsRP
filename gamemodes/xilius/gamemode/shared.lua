@@ -1,10 +1,10 @@
 if SERVER then
-    AddCSLuaFile( "xilius/config.lua" )
-    include( "xilius/config.lua" )
+    AddCSLuaFile( "xilius/config/general.lua" )
+    include( "xilius/config/general.lua" )
 end
 
 if CLIENT then
-    include( "xilius/config.lua" )
+    include( "xilius/config/general.lua" )
 end
 
 DeriveGamemode( "sandbox" )
@@ -125,6 +125,20 @@ function XL:Initialize()
         end
 
     end
+    mfiles, msdirs = fFind( "xilius/config/*", "LUA" )
+        for k, j in next, mfiles do
+            
+            if SERVER then
+                addCSFile( "xilius/config/" .. j )
+                includeFile( "xilius/config/" .. j )
+            end
+
+            if CLIENT then
+                includeFile( "xilius/config/" .. j )
+            end
+            
+        end
+
     XL:Log( "Loading Complete", "Modules", greenColor )
 end
 
