@@ -22,7 +22,7 @@ local function WhitelistOpen()
 	wlFrame:MakePopup()
 	wlFrame.Paint = function( self, w, h )
 		drawBox( 10, 0, 0, w, h, Color( 30, 30, 30 ) )
-		drawText( "Jobs Menu", "XL:Scoreboard:Title", w*.02, h*.05, whiteColor, 0, 1)
+		drawText( "Xilius | Whitelist", "XL:Scoreboard:Title", w*.02, h*.05, whiteColor, 0, 1)
 	end
 	wlFrame.Think = function()
 		if isAnimating then
@@ -31,13 +31,13 @@ local function WhitelistOpen()
 	end
 
 	local closeBtn = uiCreate( "DButton", wlFrame )
-	closeBtn:SetSize( 26, 26 )
+	closeBtn:SetSize( 30, 30 )
 	closeBtn:SetPos( wbw-40, 10 )
 	closeBtn:SetText("")
 	closeBtn.lerp = 0
 	closeBtn.Paint = function( self, w, h )
 		drawBox( 5, 0, 0, w, h, Color( 240, 0, 52, self.lerp ) )
-		drawText( "X", "XL:Scoreboard:Names", w/2, h/2, Color( 255, 255, 255 ), 1, 1 )
+		drawText( "X", "XL:Scoreboard:Names", w*.47, h*.55, Color( 255, 255, 255 ), 1, 1 )
 
 		if self:IsHovered() then
 			self.lerp = xLerp( frameTime()*8, self.lerp, 255 )
@@ -118,7 +118,7 @@ local function WhitelistOpen()
 
 			drawText( v:Nick(), "XL:Scoreboard:Names", w*.23, h*.35, whiteColor, 0, 1 )
 			drawText( playerGroup.name, "XL:Scoreboard:Groups", w*.23, h*.75, playerGroup.color, 0, 1 )
-			drawText( XL:GetTeamName(v), "XL:Scoreboard:Names", w*.65, h/2, whiteColor, 1, 1 )
+			--drawText( ply:GetNWString( "XL:TeamName" ), "XL:Scoreboard:Names", w*.65, h/2, whiteColor, 1, 1 )
 
 			if self:IsHovered() then
 				self.lerp = xLerp( frameTime()*8, self.lerp, w*.03 )
@@ -211,7 +211,7 @@ local function WhitelistOpen()
 				rankAvatar.LayoutEntity = function() return end
 
 				rankBtn.DoClick = function()
-					if lastCurRank ~= nil then
+					if lastCurRank ~= nil and lastCurRank:IsValid() then
 						lastCurRank.selected = false
 					end
 
