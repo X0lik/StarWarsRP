@@ -17,6 +17,7 @@ end
 _G.net.Receive = nw.Receive
 
 function nw.Timeout(ply, name, time)
+    if ply == nil then return end
     ply.NetTimedOut[name] = true
     timer.Simple( time, function()
         if IsValid( ply ) then ply.NetTimedOut[name] = false end
@@ -24,6 +25,7 @@ function nw.Timeout(ply, name, time)
 end
 
 function nw.IsTimedOut(ply, name)
+    if ply == nil then return false end
     if ply.NetTimedOut[name] ~= nil and ply.NetTimedOut[name] then
         XL:Log( ply:Name() .. " (" .. ply:SteamID() .. ") trying to use exploit", name, redColor )
         XL:HTTPLog( ply:Name() .. " (" .. ply:SteamID() .. ") trying to use exploit: " .. name )
