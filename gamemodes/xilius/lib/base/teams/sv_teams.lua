@@ -1,9 +1,16 @@
 function XL:SetTeam( ply, team, rank )
 	ply:SetTeam( team )
 	ply.teamRank = 0
+
+	local teamTable = XL.Teams[team]
+	ply:SetNWString( "XL:TeamName", teamTable.name ) 
 	if rank ~= nil and rank ~= 0 then
 		ply.teamRank = rank
+		ply:SetNWString( "XL:TeamName", teamTable.ranks[rank].name )
+		ply:StripWeapons()
+		XL:UpdateTeam( ply )
 	end
+
 end
 
 function XL:UpdateTeam( ply )

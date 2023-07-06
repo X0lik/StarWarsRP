@@ -53,7 +53,7 @@ local function ScoreboardOpen()
 
 			drawText( v:Nick(), "XL:Scoreboard:Names", pw*.08, ph*.35, Color( 255, 255, 255 ), 0, 1 )
 			drawText( XL.ScoreboardGroups[v:GetUserGroup()].name, "XL:Scoreboard:Groups", pw*.08, ph*.75, XL.ScoreboardGroups[v:GetUserGroup()].color, 0, 1 )
-			drawText( XL:GetTeamName(v), "XL:Scoreboard:Teams", pw/2, ph/2, v:GetTeam().color, 1, 1 )
+			drawText( v:GetNWString( "XL:TeamName" ), "XL:Scoreboard:Teams", pw/2, ph/2, v:GetTeam().color, 1, 1 )
 
 			if v:Ping() <= 60 then
 				pingColor = Color( 0, 255, 102 )
