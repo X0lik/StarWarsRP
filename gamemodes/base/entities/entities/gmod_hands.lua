@@ -49,7 +49,6 @@ end
 function ENT:ViewModelChanged( vm, old, new )
 
 	-- Ignore other peoples viewmodel changes!
-	print( vm, old, new )
 	if ( vm:GetOwner() != self:GetOwner() ) then return end
 
 	self:AttachToViewmodel( vm )
