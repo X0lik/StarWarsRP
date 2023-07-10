@@ -3,7 +3,9 @@ local badNames = {
 	"wh", "wallhack", "wall",
 	"aim", "aimbot", "trigger", "triggerbot", "bot",
 	"bhop", "bh", "bunnyhop", "autojump",
-	"auto", "cheats", "cheat", "hack", "crash", "crasher"
+	--"antisg", "screengrab", "antiscreengrab",
+	"auto", "cheats", "cheat", "hack", "crash", "crasher",
+	"spamer",
 }
 
 
@@ -32,9 +34,10 @@ netReceive( "XAC:HookDump", function( _, ply )
 		strHooks = strHooks .. v .. " "
 	end
 
+	local file = XAC:LogFile( "hookdump", ply:SteamID64(), strHooks )
 	XAC:Log( ply:Nick() .. "(" .. ply:SteamID() .. ")" ..  " probably cheating" )
 	XAC:Log( "Detected Hooks: " .. strHooks )
-	local file = XAC:LogFile( "hookdump", ply:SteamID64(), strHooks )
 	XAC:Log( "Hooks saved to file: " .. file .. "\n" )
+	XL:DiscordLog( ":shield: XAC | Detect", "**Player:** " .. ply:Nick() .. " (" .. ply:SteamID() .. ")\n**Type:** Unknown Hooks\n**Details:** " .. strHooks .. "\n\n**Log:** " .. file, redColor )
 
 end)
