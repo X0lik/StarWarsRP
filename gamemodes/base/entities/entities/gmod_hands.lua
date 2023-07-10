@@ -6,7 +6,7 @@ ENT.RenderGroup = RENDERGROUP_OTHER
 
 function ENT:Initialize()
 
-	hook.Add( "OnViewModelChanged", "GmodHandsBase", function( vm, old, new ) self:ViewModelChanged(vm, old, new) end)
+	hook.Add( "OnViewModelChanged", "GmodHandsBase", function( vm, old, new ) if CLIENT then self:ViewModelChanged(vm, old, new) end end)
 
 	self:SetNotSolid( true )
 	self:DrawShadow( false )
