@@ -1,3 +1,5 @@
+--https://discord.com/api/webhooks/1128106356533104750/F0xnku3O1OiVSZV6U6rd6InKsm9kaZYu7a4N1xMz_KJ0eNEXRcnUOdeWeZ8Ywb8MBKwE
+
 local _CurTime = CurTime
 local _IsValid = IsValid
 local _hook_Add = hook.Add

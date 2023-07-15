@@ -1,5 +1,3 @@
-my_http = CHTTP
-
 local createDir, fileFind, fileWrite, fileRead, fileDelete, metaTable, hookAdd = file.CreateDir, file.Find, file.Write, file.Read, file.Delete, debug.getregistry(), hook.Add
 createDir( "xac" )
 
@@ -48,7 +46,7 @@ function PLAYER:XACBan( reason )
 	XAC:Log( self:Nick() .. " был заблокирован анти-читом" )
 	XAC:Log( "Причина: " .. reason )
 	XAC:Log( "Лог бана: " .. banData )
-	XL:DiscordLog( ":shield: XAC | Ban", "**Игрок:** " .. self:Nick() .. " (" .. self:SteamID() .. ")\n**Причина:** " .. reason .. "\n**Лог:** " .. banData , redColor )
+	XAC:DiscordLog( "Ban", ply, "Permanent ban", reason, banData )
 	self.XACHasBanned = true
 	self:Kick( "XAC Ban: " .. reason )
 	

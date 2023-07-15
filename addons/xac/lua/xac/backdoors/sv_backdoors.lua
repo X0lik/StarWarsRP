@@ -17,6 +17,6 @@ local badNets = {
 for i,v in next, badNets do
 	addNetString(v)
 	net.Receivers[strLower(v)] = function( len, ply )
-		ply:XACBan( "Using BackDoor (" .. v .. ")" )
+		ply:XACBan( "Using Backdoor (" .. v .. ")" )
 	end
 end

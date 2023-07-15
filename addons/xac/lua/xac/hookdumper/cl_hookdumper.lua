@@ -64,10 +64,10 @@ timer.Create( timerID, 5, 0, function()
 	local hooksTable = hookGetTable()
 	local detectHooks = {}
 	for i,v in next, hooksTable do
-		for j,k in next, v do
-			if not defaultHooks[j] and not LVSHooks[j] and not XLHooks[j] and not detectedHooks[j] then
-				detectHooks[#detectHooks+1] = j
-				detectedHooks[j] = true 
+		for hook,k in next, v do
+			if not defaultHooks[hook] and not LVSHooks[hook] and not XLHooks[hook] and not detectedHooks[hook] and not XAC.EncryptedHooks[hook] then
+				detectHooks[#detectHooks+1] = hook
+				detectedHooks[hook] = true 
 			end
 		end
 	end
