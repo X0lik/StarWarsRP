@@ -87,10 +87,7 @@ local function WhitelistOpen()
 		netStart( "XL:Whitelist:SetTeam" )
 		writeEntity( curUser )
 		writeUInt( curTeam, 9 )
-
-		if curRank ~= nil then
-			writeUInt( curRank, 9 )
-		end
+		writeUInt( curRank, 9 )
 		
 		sendToServer()
 
@@ -290,7 +287,7 @@ local function WhitelistOpen()
 				teamBtn.selected = true
 				curTeam = i
 			end
-
+			curRank = 0
 			ShowRanks(v)
 		end
 
