@@ -5,6 +5,10 @@ local xLerp, frameTime = Lerp, FrameTime
 local getHostName = GetHostName
 local uiCreate = vgui.Create
 local isValid = IsValid
+local createFont = surface.CreateFont
+local scaleToScreen = ScreenScale
+
+createFont( "XL:WhiteList:Title", { font = "Manrope Light", size = scaleToScreen(18), weight = 100, extended = true } )
 
 local function WhitelistOpen()
 
@@ -22,7 +26,7 @@ local function WhitelistOpen()
 	wlFrame:MakePopup()
 	wlFrame.Paint = function( self, w, h )
 		drawBox( 10, 0, 0, w, h, Color( 30, 30, 30 ) )
-		drawText( "Xilius | Whitelist", "XL:Scoreboard:Title", w*.02, h*.05, whiteColor, 0, 1)
+		drawText( "Xilius | Whitelist", "XL:WhiteList:Title", w*.02, h*.05, whiteColor, 0, 1)
 	end
 	wlFrame.Think = function()
 		if isAnimating then
@@ -58,7 +62,7 @@ local function WhitelistOpen()
 	confirmBtn:SetText("")
 	confirmBtn.rl, confirmBtn.gl, confirmBtn.bl = 0, 184, 89
 	confirmBtn.Paint = function( self, w, h )
-		drawBox( 5, 0, 0, w, h, cbColor )
+		drawBox( 8, 0, 0, w, h, cbColor )
 		drawText( "Установить", "XL:Scoreboard:Teams", w/2, h/2, ctColor, 1, 1 )
 
 		if curUser ~= nil and curTeam ~= nil then
@@ -66,9 +70,9 @@ local function WhitelistOpen()
 			ctColor = Color( 255, 255, 255 )
 
 			if self:IsHovered() then
-				self.rl = xLerp( frameTime()*8, self.rl, 116 )
-				self.gl = xLerp( frameTime()*8, self.gl, 0 )
-				self.bl = xLerp( frameTime()*8, self.bl, 255 )
+				self.rl = xLerp( frameTime()*8, self.rl, defaultColor.r )
+				self.gl = xLerp( frameTime()*8, self.gl, defaultColor.g )
+				self.bl = xLerp( frameTime()*8, self.bl, defaultColor.b )
 			else
 				self.rl = xLerp( frameTime()*8, self.rl, 0 )
 				self.gl = xLerp( frameTime()*8, self.gl, 184 )
@@ -110,8 +114,8 @@ local function WhitelistOpen()
 		playerBtn.slerp = 0
 		playerBtn.Paint = function( self, w, h )
 			drawBox( 0, 0, 0, w, h, Color( 35, 35, 35 ) )
-			drawBox( 0, 0, 0, self.lerp, h, Color( 116, 0, 255 ) )
-			drawBox( 0, 0, 0, self.slerp, h, Color( 116, 0, 255 ) )
+			drawBox( 0, 0, 0, self.lerp, h, defaultColor )
+			drawBox( 0, 0, 0, self.slerp, h, defaultColor )
 
 			drawText( v:Nick(), "XL:Scoreboard:Names", w*.23, h*.35, whiteColor, 0, 1 )
 			drawText( playerGroup.name, "XL:Scoreboard:Groups", w*.23, h*.75, playerGroup.color, 0, 1 )
@@ -180,8 +184,8 @@ local function WhitelistOpen()
 				rankBtn.slerp = 0
 				rankBtn.Paint = function( self, w, h )
 					drawBox( 0, 0, 0, w, h, Color( 35, 35, 35 ) )
-					drawBox( 0, 0, 0, self.lerp, h, Color( 116, 0, 255 ) )
-					drawBox( 0, 0, 0, self.slerp, h, Color( 116, 0, 255 ) )
+					drawBox( 0, 0, 0, self.lerp, h, defaultColor )
+					drawBox( 0, 0, 0, self.slerp, h, defaultColor )
 
 					drawText( v.name, "XL:Scoreboard:Names", w*.25, h/2, v.color, 0, 1 )
 
@@ -245,8 +249,8 @@ local function WhitelistOpen()
 		teamBtn.slerp = 0
 		teamBtn.Paint = function( self, w, h )
 			drawBox( 0, 0, 0, w, h, Color( 35, 35, 35 ) )
-			drawBox( 0, 0, 0, self.lerp, h, Color( 116, 0, 255 ) )
-			drawBox( 0, 0, 0, self.slerp, h, Color( 116, 0, 255 ) )
+			drawBox( 0, 0, 0, self.lerp, h, defaultColor )
+			drawBox( 0, 0, 0, self.slerp, h, defaultColor )
 
 			drawText( v.name, "XL:Scoreboard:Names", w*.25, h/2, v.color, 0, 1 )
 			drawText( "Ranks: " .. ( ( v.ranks ~= nil and #v.ranks ) or 0 ), "XL:Scoreboard:Names", w*.65, h/2, whiteColor, 0, 1 )
