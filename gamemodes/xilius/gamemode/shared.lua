@@ -1,17 +1,17 @@
 if SERVER then
-    AddCSLuaFile( "xilius/config/general.lua" )
-    include( "xilius/config/general.lua" )
+    AddCSLuaFile( "xilius/lib/config/general.lua" )
+    include( "xilius/lib/config/general.lua" )
 end
 
 if CLIENT then
-    include( "xilius/config/general.lua" )
+    include( "xilius/lib/config/general.lua" )
 end
 
 DeriveGamemode( "sandbox" )
 GM.Name = "Xilius: StarWarsRP"
 GM.Author = "X0lik"
 
-defaultColor = Color( 54, 102, 191 )
+defaultColor = Color( 0, 138, 235 )
 greenColor = Color( 54, 191, 143 )
 orangeColor = Color( 255, 153, 0 )
 redColor = Color( 220, 20, 60 )
@@ -26,9 +26,9 @@ function XL:Log( prefix, message, color, submessage )
             prefixColor = color
         end
         if submessage == nil then
-            msgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message .. '\n' )
+            msgC( prefixColor, "| ", defaultColor, "[XLib] ", whiteColor, prefix .. ": ", color, message .. "\n" )
         else
-            msgC( prefixColor, '| ', defaultColor, '[XLib] ', whiteColor, prefix .. ': ', color, message, whiteColor, ' - ' .. submessage .. '\n' )
+            msgC( prefixColor, "| ", defaultColor, "[XLib] ", whiteColor, prefix .. ": ", color, message, whiteColor, " - " .. submessage .. "\n" )
         end
     end
 
@@ -38,26 +38,26 @@ local includeFile = include
 local addCSFile = AddCSLuaFile
 local function LoadFile( part, dir, file )
 
-    if part == 'sv' then
+    if part == "sv" then
         if SERVER then
-            includeFile( 'xilius/lib/' .. dir .. '/' .. file )
+            includeFile( "xilius/lib/" .. dir .. "/" .. file )
         end
-    elseif part == 'sh' then
+    elseif part == "sh" then
         if SERVER then
-            addCSFile( 'xilius/lib/' .. dir .. '/' .. file )
-            includeFile( 'xilius/lib/' .. dir .. '/' .. file  )
+            addCSFile( "xilius/lib/" .. dir .. "/" .. file )
+            includeFile( "xilius/lib/" .. dir .. "/" .. file  )
         end
 
         if CLIENT then
-           includeFile( 'xilius/lib/' .. dir .. '/' .. file  )
+           includeFile( "xilius/lib/" .. dir .. "/" .. file  )
         end
-    elseif part == 'cl' then
+    elseif part == "cl" then
         if SERVER then
-          addCSFile( 'xilius/lib/' .. dir .. '/' .. file )
+          addCSFile( "xilius/lib/" .. dir .. "/" .. file )
         end
 
         if CLIENT then
-           includeFile( 'xilius/lib/' .. dir .. '/' .. file  )
+           includeFile( "xilius/lib/" .. dir .. "/" .. file  )
         end
     end
 
@@ -143,7 +143,7 @@ function XL:Initialize()
 end
 
 function GM:Initialize()
-    --XL:Initialize()
+    XL:Initialize()
 end
 
 XL:Initialize()
