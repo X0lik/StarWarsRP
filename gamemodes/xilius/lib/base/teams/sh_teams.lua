@@ -45,6 +45,15 @@ TEAM_CITIZEN = XL:NewTeam({
 			ammo = {
 				["357"] = 50
 			},
+		},
+
+		[2] = {
+			name = "SpongeBob",
+			models = { "models/player/Group02/male_04.mdl", "models/player/Group02/male_06.mdl" },
+			weapons = { "weapon_fists", "weapon_ar2", "weapon_shotgun" },
+			ammo = {
+				["357"] = 50
+			},
 		}
 		
 	}

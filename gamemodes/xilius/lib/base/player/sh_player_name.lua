@@ -1,7 +1,10 @@
-local PLAYER = FindMetaTable("Player")
+local PLAYER = debug.getregistry().Player
+PLAYER.SteamName = PLAYER.Nick
 function PLAYER:Nick()
 	return self:GetNW2String( "XL:Name", XL.Config.DefaultName )
 end
+PLAYER.Name 	= PLAYER.Nick
+PLAYER.GetName 	= PLAYER.Nick
 
 function PLAYER:ID()
 	return self:GetNW2String( "XL:ID", "0" )
