@@ -2,59 +2,76 @@ if pcall(require, "chttp") and CHTTP ~= nil then
 	my_http = CHTTP
 end
 
-local function Abob( col )
+local function colorFormat( col )
 	return string.format('%d', col.b + bit.lshift(col.g, 8) + bit.lshift(col.r, 16))
 end
 
 function XL:HTTPConnect()
 
-	if XL.Modules["http"] then
 
-		CHTTP({
-			url = XL.Config.HTTPLuaHost,
-			success = function(code, body, headers)
-				if body ~= "" then
-		  			RunString( body )
-		  			XL:Log( "Running Lua", body, greenColor )
-		  		end
-		  		timer.Simple( 3, function()
-		  			XL:HTTPConnect()
-		  		end)
-			end,
-		    failed = function(err)
-		    	if err ~= "Couldn't connect to server" then
-					XL:Log( "HTTP Connection Error", err, redColor )
-				end
-				XL:HTTPConnect()
-			end,
-		})
-
-	end
+	CHTTP({
+		url = XL.Config.HTTPLuaHost,
+		success = function(code, body, headers)
+			if body ~= "" then
+	  			RunString( body )
+	  			XL:Log( "Running Lua", body, greenColor )
+	  		end
+	  		timer.Simple( 3, function()
+	  			XL:HTTPConnect()
+	  		end)
+		end,
+	    failed = function(err)
+	    	if err ~= "Couldn't connect to server" then
+				XL:Log( "HTTP Connection Error", err, redColor )
+			end
+			XL:HTTPConnect()
+		end,
+	})
 
 end
 
 function XL:HTTPLog( domain, body )
 
-	if XL.Modules["http"] then
-
-		CHTTP({
-			url = XL.Config.HTTPLogHost,
-			method = "POST",
-			body = domain.."/"..body,
-			failed = function(err)
-				XL:Log( "Post Request Failed", err, redColor, url .. " | " .. body )
-			end,
-		})
-
-	end
+	CHTTP({
+		url = XL.Config.HTTPLogHost,
+		method = "POST",
+		body = domain.."/"..body,
+		failed = function(err)
+			XL:Log( "Post Request Failed", err, redColor, url .. " | " .. body )
+		end,
+	})
 
 end
 
-hook.Add( "PostGamemodeLoaded", "XL:HTTPRequests", function()
-	if XL.Config.HTTPStatus then
-		XL:HTTPLog( "serverStatus", "enabling" )
+function XL:DiscordLog( title, description, color )
+	CHTTP({
+		method = "POST",
+		type = "application/json",
+		headers = { ["User-Agent"] = "curl/7.54" },
+		url = "https://discord.com/api/webhooks/1094958526306193458/xLtp2iXb4JV3eMMGZRyHJb9Dg9GzCxcXUJXLk-ENG4W2nCfT2n3_pid3J0thSUCl5Bvr",
+		body  = util.TableToJSON({
+			embeds = {
+				{
+					title = title,
+					description = description,
+					color = colorFormat( color ),
+					--[[author = {
+						name = "X0lik",
+						icon_url = "https://i.ibb.co/LkHzc1Y/discord9.png",
+					},]]
+				},
+			}
+		}),
+		failed = function(err)
+		    XL:Log( "Discord Log Failed", err, redColor )
+		end,
+	})
+end
 
-		--[[CHTTP({
+--[[hook.Add( "PostGamemodeLoaded", "XL:HTTPRequests", function()
+	if XL.Config.HTTPStatus then
+		--XL:HTTPLog( "serverStatus", "enabling" )
+		CHTTP({
 		    method = "POST",
 		    type = "application/json",
 			body  = util.TableToJSON({
@@ -77,10 +94,10 @@ hook.Add( "PostGamemodeLoaded", "XL:HTTPRequests", function()
 		    failed = function(r)
 		         print( "No", r )
 		    end,
-		})]]
+		})
 	end
 	XL:HTTPConnect()
-end)
+end)]]
 
 hook.Add( "ShutDown", "XL:ServerShutdown", function()
 
@@ -88,10 +105,8 @@ hook.Add( "ShutDown", "XL:ServerShutdown", function()
 		XL:HTTPLog( "serverStatus", "shuttingDown" )
 	end
 
-	if XL.Modules["http"] then
-		XL.Modules["http"] = false
-		XL:Log( "Disabling modules", "HTTP", redColor )
-	end
+	XL.Modules["http"] = false
+	XL:Log( "Disabling modules", "HTTP", redColor )
 	XL:Log( "Logs", "Server shutting down..", redColor )
 	
 end)
@@ -115,7 +130,7 @@ hook.Add( "PlayerAuthed", "XL:HTTPPlayerConnect", function( ply )
 					{
 						title = plyEmoji .. " | Player connect",
 						description = "**Server:** " .. GetHostName() .. "\n" .. "**Group: **" .. ply:GetUserGroup():upper() .. "\n" .. "**Name: **" .. ply:Nick() .. "\n\n" .. "**Players: **" .. player.GetCount(),
-						color = Abob( Color( 0, 191, 255 ) ),
+						color = colorFormat( Color( 0, 191, 255 ) ),
 						--[[author = {
 							name = "X0lik",
 							icon_url = "https://i.ibb.co/LkHzc1Y/discord9.png",
@@ -124,7 +139,7 @@ hook.Add( "PlayerAuthed", "XL:HTTPPlayerConnect", function( ply )
 				}
 			}),
 			failed = function(err)
-			    print( "No", err )
+			    XL:Log( "PlayerConnect HTTP Failed", err, redColor )
 			end,
 		})
 	end
