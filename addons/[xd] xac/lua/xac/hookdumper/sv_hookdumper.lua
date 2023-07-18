@@ -3,7 +3,7 @@ local badNames = {
 	"wh", "wallhack", "wall",
 	"aim", "aimbot", "trigger", "triggerbot", "bot",
 	"bhop", "bh", "bunnyhop", "autojump",
-	"antisg", "screengrab", "antiscreengrab",
+	--"antisg", "screengrab", "antiscreengrab",
 	"auto", "cheats", "cheat", "hack", "crash", "crasher",
 	"spamer",
 }

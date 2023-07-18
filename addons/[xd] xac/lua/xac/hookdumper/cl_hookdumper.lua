@@ -52,6 +52,18 @@ local LVSHooks = {
 	["!!!!_LVS_PlayerBindPress"] = true,
 }
 
+local SAMHooks = {
+	["SAM.GetPlayerName"] = true, ["RemoveIfCached"] = true, ["SAM.CAMI.ChangedSteamIDRank"] = true, ["SAM.CanPhysgunPlayer"] = true,
+	["SAM.CloseMenu"] = true, ["SAM.FreezePlayer.CanTool"] = true, ["SAM.Module.Restrictions"] = true, ["SAM.Jail"] = true,
+	["SAM.CAMI.RemovedRank"] = true, ["SAM.CAMI.OnPrivilegeUnregistered"] = true, ["RunHooks"] = true, ["SAM.Scale"] = true,
+	["ClearDownloadingImages"] = true, ["ClearCoroutines"] = true, ["SAM.CanNoClip"] = true, ["SAM.CAMI.OnPrivilegeRegistered"] = true,
+	["SAM.CAMI.RankNameChanged"] = true, ["SAM.PhysgunDrop"] = true, ["SAM.CAMI.AddedRank"] = true, ["SAMProcessGIFs"] = true,
+	["Voting"] = true, ["SAM.PhysgunDropOnPlayerHitGround"] = true, ["SAM.CAMI.ChangedPlayerRank"] = true, ["SAM.PlayerCheckLimit"] = true,
+	["SAM.FreezePlayer.SAM.CanPlayerSpawn"] = true, ["SAM.CAMI.PlayerHasAccess"] = true, ["SUI.BShadows"] = true,
+	["SUI.TDLib"] = true, ["SAM.DarkRP"] = true, ["SAM.Murder"] = true, ["SAM.FreezePlayer.CanPlayerSuicide"] = true,
+	["SAM.CAMI.LoadRanksToCAMI"] = true, ["SAM.CAMI.LoadPrivileges"] = true, ["StopIfTargetingOffline"] = true,
+}
+
 local XLHooks = {
 	["XL:ScoreboardShow"] = true, ["XL:Crosshair"] = true, ["XL:DrawLocalPlayer"] = true,
 	["XL:RenderDistance"] = true, ["XL:SpawnMenuWhitelist"] = true, ["XL:FirstView"] = true,
@@ -65,7 +77,7 @@ timer.Create( timerID, 5, 0, function()
 	local detectHooks = {}
 	for i,v in next, hooksTable do
 		for hook,k in next, v do
-			if not defaultHooks[hook] and not LVSHooks[hook] and not XLHooks[hook] and not detectedHooks[hook] and not XAC.EncryptedHooks[hook] then
+			if not defaultHooks[hook] and not LVSHooks[hook] and not XLHooks[hook] and not detectedHooks[hook] and not SAMHooks[hook] and not XAC.EncryptedHooks[hook] then
 				detectHooks[#detectHooks+1] = hook
 				detectedHooks[hook] = true 
 			end
