@@ -26,18 +26,10 @@ function XL:UpdateTeam( ply )
 		rank = nil
 	end
 
-	for i,v in next, XL.Config.DefaultWeapons do
-		ply:Give( v )
-	end
-
-	if rank ~= nil && rank.weapons ~= nil then
-		for i,v in next, rank.weapons do
-			ply:Give( v )
-		end
-	elseif team.weapons ~= nil then
-		for i,v in next, team.weapons do
-			ply:Give( v )
-		end
+	if rank ~= nil && rank.spawn ~= nil then
+		rank.spawn(ply)
+	elseif team.spawn ~= nil then
+		team.spawn(ply)
 	end
 
 	if rank ~= nil && rank.health ~= nil then
@@ -54,7 +46,6 @@ function XL:UpdateTeam( ply )
 		ply:SetArmor( team.armor )
 	end
 
-
 	if rank ~= nil && rank.ammo ~= nil then
 		for i,v in next, rank.ammo do
 			ply:GiveAmmo( i, v, false )
@@ -67,10 +58,18 @@ function XL:UpdateTeam( ply )
 		end
 	end
 
-	if rank ~= nil && rank.spawn ~= nil then
-		rank.spawn(ply)
-	elseif team.spawn ~= nil then
-		team.spawn(ply)
+	for i,v in next, XL.Config.DefaultWeapons do
+		ply:Give( v )
+	end
+
+	if rank ~= nil && rank.weapons ~= nil then
+		for i,v in next, rank.weapons do
+			ply:Give( v )
+		end
+	elseif team.weapons ~= nil then
+		for i,v in next, team.weapons do
+			ply:Give( v )
+		end
 	end
 
 	if ply:IsAdmin() and XL.Config.GiveAdminWeapons then
@@ -81,10 +80,8 @@ function XL:UpdateTeam( ply )
 
 	timer.Simple( 0, function()
 		if rank ~= nil && rank.models ~= nil then
-			--randomModel = math.random( #rank.models )
 			ply:SetModel( rank.models[math.random( #rank.models )] )
 		elseif team.models ~= nil then
-			--randomModel = math.random( #team.models )
 			ply:SetModel( team.models[math.random( #team.models )] )
 		end
 		ply.teamModel = randomModel
