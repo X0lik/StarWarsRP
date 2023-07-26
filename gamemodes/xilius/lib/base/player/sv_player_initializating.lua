@@ -16,8 +16,5 @@ hook.Add( "PlayerInitialSpawn", "XL:SetDefaultTeam", function( ply )
 			end
 		end
 
-		if XL.Modules["money"] then
-			ply.Money = XL.Config.StartMoney
-		end
 	end)
 end)
