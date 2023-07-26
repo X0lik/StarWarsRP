@@ -1,13 +1,11 @@
 XL = XL or {}
 XL.Modules = {}
 XL.Modules["base"] = true
-XL.Modules["vgui"] = true
-XL.Modules["cmd"] = true
-XL.Modules["resource"] = true
+XL.Modules["database"] = true
 XL.Modules["http"] = true
+XL.Modules["resource"] = true
 XL.Modules["starwars"] = true
-XL.Modules["donate"] = false
-
+XL.Modules["vgui"] = true
 
 XL.Config = {}
 XL.Config.DefaultCrouch = .4
