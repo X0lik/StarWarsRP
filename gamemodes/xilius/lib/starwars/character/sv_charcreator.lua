@@ -1,171 +1,100 @@
-file.CreateDir( "characters" )
-util.AddNetworkString( "XL:CharacterMenu" )
-util.AddNetworkString( "XL:CreateCharacter" )
-XL.NamesList = {}
-XL.IDList = {}
-local fWrite, fRead, fDelete, fAppend, fExist, fCreateDir = file.Write, file.Read, file.Delete, file.Append, file.Exists, file.CreateDir
 local strSplit, strFind, strLen = string.Split, string.find, utf8.len
+local addNetString, Receive, ReadString, Start, Send = util.AddNetworkString, net.Receive, net.ReadString, net.Start, net.Send
+local findMetaTable = FindMetaTable
 local mathRandom = math.random
 
-function XL:CharsLoad()
 
-  local nametbl, idtbl = fRead( "characters/names_list.txt", "DATA" ), fRead( "characters/id_list.txt", "DATA" )
-  if nametbl == nil or idtbl == nil then
-    fWrite( "characters/names_list.txt", "" )
-    fWrite( "characters/id_list.txt", "" )
-  else
-    nametbl = strSplit( nametbl, "|" )
-    idtbl = strSplit( idtbl, "|" )
-    local names, id = '', ''
-    for i,v in next, nametbl do
-        names = names .. v .. '|'
-        XL.NamesList[i] = name
-    end
+local db = XL.DB
+local PLY = findMetaTable( 'Player' )
 
-    for i,v in next, idtbl do
-        id = id .. v .. '|'
-        XL.IDList[i] = id
-    end
+addNetString( "XL:CharacterMenu" )
+addNetString( "XL:CreateCharacter" )
 
-    fWrite( "characters/names_list.txt", names )
-    fWrite( "characters/id_list.txt", id )
-  end
-  XL:Log( "Characters", "Characters list loaded", greenColor )
-
-end
-hook.Add( "PostGamemodeLoaded", "XL:LoadAllChars", function() XL:CharsLoad() end)
-
-local meta = FindMetaTable( 'Player' )
-function meta:CharMenu()
-  net.Start( "XL:CharacterMenu" )
-  net.Send( self )
+function PLY:CharMenu()
+    net.Start( "XL:CharacterMenu" )
+    net.Send( self )
 end
 
-function meta:CharCreate( name, id )
+function PLY:CharCreate( name, id )
 
-  if fExist( "characters/" .. self:SteamID64() .. "/character.txt", "DATA" ) then
-    return false, "Персонаж уже создан"
-  else
-    id = tostring( id )
-    fCreateDir( "characters/" .. self:SteamID64() )
-    fWrite( "characters/" .. self:SteamID64() .. "/character.txt", name .. "|" .. id )
-    fAppend( "characters/names_list.txt", name .. "|" )
-    fAppend( "characters/id_list.txt", id .. "|" )
-    XL.NamesList[#XL.NamesList+1] = name
-    XL.IDList[#XL.IDList+1] = id
+    db:Query( 'SELECT * FROM `xilius_characters` WHERE `steamid`=' .. self:SteamID64() .. ';', function( res )
+        local data = res[1].data[1]
+        if data then
+            XL:Log( "Character Creation Error", "Reason: Character Already Created", redColor )
+            return false
+        else
+            db:Query( 'SELECT * FROM `xilius_characters` WHERE name="' .. name .. '";', function( sres )
 
-    self:SetName( name )
-    self:SetID( id )
+                local sdata = sres[1].data[1]
+                if sdata then
+                    XL:Log( "Character Creation Error", "Reason: Name already exists", redColor )
+                    return false
+                else
+
+                    db:Query( 'INSERT INTO `xilius_characters`( `steamid`, `charid`, `name`, `id`, `money`, `job`, `rank` ) VALUES( ' .. self:SteamID64() .. ', 1, "' .. name ..  '", ' .. id .. ', ' .. XL.Config.StartMoney .. ', 1, 0 )' )
+                    self:SetName( name )
+                    self:SetID( id )
+                    --self:SetMoney( XL.Config.StartMoney )
+                    return true
+
+                end
+
+            end)
+        end
+    end)
+
+end
+
+function PLY:CharRemove( admin, reason )
+
+    if admin == nil then
+        admin = "Console"
+    else
+        admin = admin:Name() .. " (" .. admin:SteamID() ")"
+    end
+
+    db:Query( 'DELETE FROM `xilius_characters` WHERE `steamid`=' .. self:SteamID64() .. ';' )
+
+    XL:Log( "Character Removing", admin .. " - " .. reason, redColor )
+    XL:SetTeam( self, 1 )
+
+    self:SetName( XL.Config.DefaultName )
+    self:SetID( "0" )
+    self:CharMenu()
     return true
-  end
 
 end
 
-local data
-function meta:CharLoad()
+function PLY:CharLoad()
 
-  if fExist( "characters/" .. self:SteamID64() .. "/character.txt", "DATA" ) then
-    data = fRead( "characters/" .. self:SteamID64() .. "/character.txt", "DATA" )
-  else
-    return false, "Персонажа не существует!"
-  end
+    db:Query( 'SELECT * FROM `xilius_characters` WHERE `steamid`=' .. self:SteamID64() .. ';', function( res )
 
-  data = strSplit( data, "|" )
-  self:SetName( data[1] )
-  self:SetID( data[2] )
-  return true
+        local data = res[1].data[1]
+        self:SetName( data.name )
+        self:SetID( data.id )
+        --self:SetMoney( data.money )
+        XL:SetTeam( self, data.job, data.rank )
+
+    end)
 
 end
 
-function meta:CharGet()
+Receive( "XL:CreateCharacter", function( len, pl )
 
-  if fExist( "characters/" .. self:SteamID64() .. "/character.txt", "DATA" ) then
-    return strSplit( fRead( "characters/" .. self:SteamID64() .. "/character.txt", "DATA" ), "|" )
-  else
-    return false, "Персонаж не найден!"
-  end
-
-end
-
-function meta:CharRemove( admin, reason )
-
-  if admin == nil then
-      admin = "Console"
-  else
-      admin = admin:Name() .. " (" .. admin:SteamID() ")"
-  end
-
-  if fExist( "characters/" .. self:SteamID64() .. "/character.txt", "DATA" ) then
-      fDelete( "characters/" .. self:SteamID64() .. "/character.txt" )
-  else
-      return false, "Персонажа не существует!"
-  end
-
-  local nametbl, idtbl = fRead( "characters/names_list.txt", "DATA" ), fRead( "characters/id_list.txt", "DATA" )
-  local nameStart, nameEnd = strFind( nametbl, self:Nick() .. "|" )
-  if nameStart then
-    local newNameTable = string.sub( nametbl, 1, nameStart - 1 ) .. string.sub( nametbl, nameEnd + 1 )
-    print( newNameTable )
-    fWrite( "characters/names_list.txt", newNameTable )
-  end
-
-  local idStart, idEnd = strFind( idtbl, self:ID() .. "|" )
-  if idStart then
-    local newIDTable = string.sub( idtbl, 1, idStart - 1 ) .. string.sub( idtbl, idEnd + 1 )
-    fWrite( "characters/id_list.txt", newIDTable )
-  end
-
-  for i,v in next, XL.NamesList do
-      if v == self:Nick() then
-          XL.NamesList[i] = nil
-      end
-  end
-
-  for i,v in next, XL.IDList do
-      if v == self:ID() then
-          XL.IDList[i] = nil
-      end
-  end
-
-  self:SetName( XL.Config.DefaultName )
-  self:SetID( "0" )
-  self:CharMenu()
-  return true
-
-end
-
-local function NewID()
-  local newID = mathRandom( 0, 9 ) .. mathRandom( 0, 9 ) .. mathRandom( 0, 9 ) .. mathRandom( 0, 9 )
-  for i,v in next, XL.IDList do
-      if v == newID then
-          NewID()
-          break
-      end
-  end
-  return newID
-end
-
-net.Receive( "XL:CreateCharacter", function( _, ply )
-
-  local name = net.ReadString()
-  local blacklistChars = { "|", "/", "\", %$", ":", ";", "=", "+", "?", "%%", "#", "№", "@", "!", "%[", "%]", "%{", "%}", "*", "'", '"' }
-  local blacklistedChar = false
-  for i,v in next, blacklistChars do
-    if strFind( name:lower(), v ) ~= nil then
-      blacklistedChar = true
+    local name = ReadString()
+    local blacklistChars = { "|", "/", "\", %$", ":", ";", "=", "+", "?", "%%", "#", "№", "@", "!", "%[", "%]", "%{", "%}", "*", "'", '"' }
+    local blacklistedChar = false
+    for i,v in next, blacklistChars do
+        if strFind( name:lower(), v ) ~= nil then
+            blacklistedChar = true
+            return
+        end
     end
-  end
 
-  if blacklistedChar or name == "Позывной" or strLen( name ) < 4 or strLen( name ) > 16 then
-    return false
-  end
-
-  for i,v in next, XL.NamesList do
-      if v == name then
-          return false
-      end
-  end
-
-  ply:CharCreate( name, NewID() )
+    if blacklistedChar or name == "Позывной" or strLen( name ) < 4 or strLen( name ) > 16 then
+      return false
+    end
+    
+    pl:CharCreate( name, mathRandom( 0, 9 ) .. mathRandom( 0, 9 ) .. mathRandom( 0, 9 ) .. mathRandom( 0, 9 ) )
 
 end)

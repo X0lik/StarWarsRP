@@ -6,10 +6,13 @@ addNet( "XL:Whitelist:OpenMenu" )
 nwReceive( "XL:Whitelist:SetTeam", function( _, admin )
 
 	if admin:IsSuperAdmin() then
-		ply = net.ReadEntity()
+		pl = net.ReadEntity()
 		team = readUInt(9)
 		rank = readUInt(9)
-		XL:SetTeam( ply, team, rank )
+		XL:SetTeam( pl, team, rank )
+
+		XL:SetPlayerDB( "xilius_characters", pl:SteamID64(), "job", team )
+		XL:SetPlayerDB( "xilius_characters", pl:SteamID64(), "rank", rank )
 	end
 
 end)
