@@ -1,4 +1,3 @@
-local workshopColor = Color( 0, 200, 255 )
 local workshopFiles = {
 
     {
@@ -28,9 +27,10 @@ local workshopFiles = {
 
 }
 
---timer.Simple( 0, function()
+do
+    local workshopColor = Color( 0, 200, 255 )
     for i,v in next, workshopFiles do
         resource.AddWorkshop(v.id)
-        XL:Log( 'Resource Loaded', v.name, workshopColor )
     end
---end)
+    XL:Log( "Workshop", "Resources Loaded!", workshopColor )
+end
