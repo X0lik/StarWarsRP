@@ -1,10 +1,34 @@
-local PANEL = FindMetaTable( 'Panel' )
-function PANEL:ARemove( num )
+local PANEL = FindMetaTable( "Panel" )
+function PANEL:AnimAlpha( time, delay, callback )
 
-  if num == nil then
-    num = 0.3
-  end
+    time = time or .3
+    delay = delay or 0
+    callback = callback or function() end
+    self:SetAlpha(0)
+    self:AlphaTo( 255, time, delay, callback )
 
+end
+
+function PANEL:AnimSize( sizeW, sizeH, time, delay, posX, posY )
+
+    local isAnimating = true
+    self:SetSize(0,0)
+    self:SizeTo( sizeW, sizeH, time, delay, .1, function() isAnimating = false end)
+
+    if posX and posY then
+        self.Think = function()
+            if isAnimating then
+                self:SetPos( posX, posY )
+            end
+        end
+    end
+
+end
+
+function PANEL:ARemove( num, delay )
+
+  num = num or .3
+  delay = delay or 0
   self:AlphaTo( 0, num, 0, function() self:Remove() end)
   
 end
@@ -12,9 +36,10 @@ end
 local drawBox = draw.RoundedBox
 function PANEL:BGLerp( boxRound, dColor, lColor, speed )
 
-    if speed == nil then
+    --[[if speed == nil then
       speed = 6
-    end
+    end]]
+    speed = speed or 6
 
     self.cr, self.cg, self.cb = dColor.r, dColor.g, dColor.b
     self.Paint = function( self, w, h )
@@ -63,15 +88,3 @@ function PANEL:GT( num )
     return self:GetTall()*num
   end
 end
-
---[[function draw.SCircle(posx, posy, radius, progress, color)
-    local poly = { }
-    local v = 220
-    poly[1] = {x = posx, y = posy}
-    for i = 0, v*progress+0.5 do
-        poly[i+2] = {x = math.sin(-math.rad(i/v*360)) * radius + posx, y = math.cos(-math.rad(i/v*360)) * radius + posy}
-    end
-    draw.NoTexture()
-    surface.SetDrawColor(color)
-    surface.DrawPoly(poly)
-end]]
