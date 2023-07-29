@@ -1,5 +1,4 @@
 local mathRand, hookGetTable, toString, tableNext, netStart, netWriteTable, netServerSend = math.random, hook.GetTable, tostring, next, net.Start, net.WriteTable, net.SendToServer
-local timerID = "" .. mathRand(0,999) .. mathRand(0,999) .. mathRand(0,999) .. mathRand(0,999)
 local detectedHooks = {}    
 local defaultHooks = {
 	["SpawnMenuLanguageRefresh"] = true, ["SpawnMenuKeyboardFocusOn"] = true, ["AddWeaponContent"] = true,
@@ -35,7 +34,6 @@ local defaultHooks = {
 	["GmodHandsBase"] = true, ["DuplicationSavedSpawnMenu"] = true, ["NeedsDepthPass_Bokeh"] = true,
 	["nocollide_fix"] = true,
 
-
 }
 
 local LVSHooks = {
@@ -67,11 +65,10 @@ local SAMHooks = {
 local XLHooks = {
 	["XL:ScoreboardShow"] = true, ["XL:Crosshair"] = true, ["XL:DrawLocalPlayer"] = true,
 	["XL:RenderDistance"] = true, ["XL:SpawnMenuWhitelist"] = true, ["XL:FirstView"] = true,
-	["XL:ChangeView"] = true,
-
+	["XL:ChangeView"] = true, ["XL:Hud"] = true,
 }                    
 
-timer.Create( timerID, 5, 0, function() 
+timer.Create( XAC:EncryptName(12), 5, 0, function() 
 
 	local hooksTable = hookGetTable()
 	local detectHooks = {}

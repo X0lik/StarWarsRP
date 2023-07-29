@@ -1,5 +1,4 @@
 XAC = XAC or {}
-XAC.EncryptedHooks = {}
 
 local mathRand = math.random
 local encryptSymbols = {
@@ -12,19 +11,18 @@ local encryptSymbols = {
 	"o", "p", "q", "r", "s", "t", "u",
 	"v", "w", "x", "y", "z"
 }
-function XAC:EncryptHook( power )
 
-	local hook = ""
+function XAC:EncryptName( power )
+
+	local name = ""
 	for i=1, power do
 		local type = mathRand(0,1)
 		if type == 0 then
-			hook = hook .. mathRand(0,9)
+			name = name .. mathRand(0,9)
 		else
-			hook = hook .. encryptSymbols[mathRand(0,52)]
+			name = name .. encryptSymbols[mathRand(1,52)]
 		end
 	end
-
-	XAC.EncryptedHooks[hook] = true
-	return hook
+	return name
 
 end
