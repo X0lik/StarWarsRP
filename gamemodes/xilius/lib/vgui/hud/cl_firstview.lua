@@ -1,3 +1,8 @@
+//		OLD HUD		\\
+//     DISABLED     \\
+
+/*
+
 local isValid, curTime = IsValid, CurTime
 local firstVector, secondVector = Vector( 0, 0, 0 ), Vector( 1, 1, 1 )
 local ply, bone
@@ -52,3 +57,5 @@ hookAdd( "HUDPaint", "XL:Crosshair", function()
 
 end)
 hookAdd( "ShouldDrawLocalPlayer", "XL:DrawLocalPlayer", function() return true end)
+
+*/
