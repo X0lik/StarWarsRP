@@ -46,7 +46,7 @@ function PLAYER:XACBan( reason )
 	XAC:Log( self:Nick() .. " был заблокирован анти-читом" )
 	XAC:Log( "Причина: " .. reason )
 	XAC:Log( "Лог бана: " .. banData )
-	XAC:DiscordLog( "Ban", ply, "Permanent ban", reason, banData )
+	XAC:DiscordLog( "Ban", self, "Permanent ban", reason, banData )
 	self.XACHasBanned = true
 	self:Kick( "XAC Ban: " .. reason )
 	
